@@ -43,3 +43,7 @@ app-example
 /android
 
 .cursor/
+
+.env.local
+
+convex/_generated/

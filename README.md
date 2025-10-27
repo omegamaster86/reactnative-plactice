@@ -49,3 +49,29 @@ Join our community of developers creating universal apps.
 - [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
 - [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
 # reactnative-plactice
+
+## Convex Setup (Todos backend)
+
+1. Start Convex (creates project and generates types):
+
+   ```bash
+   npx convex dev
+   ```
+
+   Follow the prompt to create/link a Convex project. Copy the provided deployment URL.
+
+2. Set the URL for the app (development):
+
+   Create a `.env` file in the project root with:
+
+   ```bash
+   EXPO_PUBLIC_CONVEX_URL="https://YOUR-DEPLOYMENT.convex.cloud"
+   ```
+
+3. Run the app:
+
+   ```bash
+   npm start
+   ```
+
+   Open the "Todos" tab to use the Convex-backed todo list.

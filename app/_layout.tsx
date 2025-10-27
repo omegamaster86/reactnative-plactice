@@ -1,10 +1,10 @@
+import { ThemedText } from '@/components/themed-text';
+import { ThemedView } from '@/components/themed-view';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import { ConvexProvider, ConvexReactClient } from 'convex/react';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
-import { ConvexProvider, ConvexReactClient } from 'convex/react';
-import { ThemedView } from '@/components/themed-view';
-import { ThemedText } from '@/components/themed-text';
 
 import { useColorScheme } from '@/hooks/use-color-scheme';
 

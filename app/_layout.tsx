@@ -30,9 +30,9 @@ export default function RootLayout() {
   if (!hasValidUrl) {
     return (
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <ThemedView style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+        <ThemedView className="flex-1 items-center justify-center p-6">
           <ThemedText type="title">Convex URL not set</ThemedText>
-          <ThemedText style={{ marginTop: 8 }}>
+          <ThemedText className="mt-2">
             Set EXPO_PUBLIC_CONVEX_URL in .env and restart.
           </ThemedText>
         </ThemedView>

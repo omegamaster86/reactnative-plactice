@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import { TextInput, TouchableOpacity, View } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { useQuery, useMutation } from 'convex/react';
 
@@ -53,25 +53,30 @@ export default function TodosScreen() {
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#F4F7FB', dark: '#0F1216' }}
       headerImage={
-        <View style={styles.headerArt}>
+        <View className="absolute -bottom-5 -right-[10px] opacity-[0.12]">
           <IconSymbol size={120} name="checkmark.circle.fill" color={Colors[colorScheme].tint} />
         </View>
       }>
-      <ThemedView style={styles.headerRow}>
+      <ThemedView className="flex-row items-center justify-between mb-3">
         <ThemedText type="title" style={{ fontFamily: Fonts.rounded }}>
           Your Todos
         </ThemedText>
         <ThemedText type="default">{remaining} remaining</ThemedText>
       </ThemedView>
 
-      <ThemedView style={styles.inputCard} lightColor="#ffffff" darkColor="#1E2022">
+      <ThemedView
+        className="flex-row items-center gap-2.5 px-[14px] py-3 rounded-[14px] mb-3"
+        style={{ shadowColor: '#000', shadowOpacity: 0.1, shadowRadius: 10, elevation: 2 }}
+        lightColor="#ffffff"
+        darkColor="#1E2022">
         <IconSymbol name="square.and.pencil" size={20} color={Colors[colorScheme].icon} />
         <TextInput
           value={text}
           onChangeText={setText}
           placeholder="Add a new task…"
           placeholderTextColor={colorScheme === 'light' ? '#9BA1A6' : '#687076'}
-          style={[styles.input, { color: colorScheme === 'light' ? '#11181C' : '#ECEDEE' }]}
+          className="flex-1 text-base py-1"
+          style={{ color: colorScheme === 'light' ? '#11181C' : '#ECEDEE' }}
           onSubmitEditing={handleAdd}
           returnKeyType="done"
         />
@@ -81,17 +86,17 @@ export default function TodosScreen() {
       </ThemedView>
 
       {tasks === undefined ? (
-        <ThemedView style={styles.emptyWrap}>
+        <ThemedView className="items-center gap-2 py-6">
           <IconSymbol name="hourglass" size={28} color={Colors[colorScheme].icon} />
           <ThemedText>Loading your tasks…</ThemedText>
         </ThemedView>
       ) : tasks.length === 0 ? (
-        <ThemedView style={styles.emptyWrap}>
+        <ThemedView className="items-center gap-2 py-6">
           <IconSymbol name="sparkles" size={28} color={Colors[colorScheme].icon} />
           <ThemedText>No tasks yet. Add your first!</ThemedText>
         </ThemedView>
       ) : (
-        <View style={styles.list}>
+        <View className="gap-2.5">
           {tasks.map((task) => (
             <TaskRow
               key={task._id}
@@ -119,8 +124,12 @@ function TaskRow({
   colorScheme: 'light' | 'dark';
 }) {
   return (
-    <ThemedView style={styles.card} lightColor="#ffffff" darkColor="#1E2022">
-      <TouchableOpacity style={styles.rowLeft} onPress={onToggle} activeOpacity={0.8}>
+    <ThemedView
+      className="flex-row items-center justify-between px-[14px] py-3 rounded-[14px]"
+      style={{ shadowColor: '#000', shadowOpacity: 0.08, shadowRadius: 8, elevation: 1 }}
+      lightColor="#ffffff"
+      darkColor="#1E2022">
+      <TouchableOpacity className="flex-row items-center gap-2.5 flex-1" onPress={onToggle} activeOpacity={0.8}>
         <IconSymbol
           name={task.completed ? 'checkmark.circle.fill' : 'circle'}
           size={24}
@@ -128,10 +137,7 @@ function TaskRow({
           weight={task.completed ? 'bold' : 'regular'}
         />
         <ThemedText
-          style={[
-            styles.taskText,
-            task.completed && { textDecorationLine: 'line-through', opacity: 0.55 },
-          ]}>
+          className={task.completed ? 'text-base line-through opacity-[0.55]' : 'text-base'}>
           {task.text}
         </ThemedText>
       </TouchableOpacity>
@@ -141,65 +147,3 @@ function TaskRow({
     </ThemedView>
   );
 }
-
-const styles = StyleSheet.create({
-  headerArt: {
-    position: 'absolute',
-    bottom: -20,
-    right: -10,
-    opacity: 0.12,
-  },
-  headerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 12,
-  },
-  inputCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    borderRadius: 14,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    elevation: 2,
-    marginBottom: 14,
-  },
-  input: {
-    flex: 1,
-    fontSize: 16,
-    paddingVertical: 4,
-  },
-  list: {
-    gap: 10,
-  },
-  card: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    borderRadius: 14,
-    shadowColor: '#000',
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
-    elevation: 1,
-  },
-  rowLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    flex: 1,
-  },
-  taskText: {
-    fontSize: 16,
-  },
-  emptyWrap: {
-    alignItems: 'center',
-    gap: 8,
-    paddingVertical: 24,
-  },
-});

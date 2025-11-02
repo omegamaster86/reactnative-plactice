@@ -1,3 +1,4 @@
+import '@/global.css';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
@@ -5,8 +6,16 @@ import { ConvexProvider, ConvexReactClient } from 'convex/react';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
-
+import { cssInterop } from 'react-native-css-interop';
+import { View, Text, TextInput, TouchableOpacity, Pressable } from 'react-native';
 import { useColorScheme } from '@/hooks/use-color-scheme';
+
+// Enable className on standard React Native components
+cssInterop(View, { className: 'style' });
+cssInterop(Text, { className: 'style' });
+cssInterop(TextInput, { className: 'style' });
+cssInterop(TouchableOpacity, { className: 'style' });
+cssInterop(Pressable, { className: 'style' });
 
 export const unstable_settings = {
   anchor: '(tabs)',

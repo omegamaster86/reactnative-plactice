@@ -31,6 +31,11 @@ export default function TodosScreen() {
     [tasks]
   );
 
+  const completedCount = useMemo(
+    () => (tasks ? tasks.filter((t) => t.completed).length : 0),
+    [tasks]
+  );
+
   const handleAdd = async () => {
     const value = text.trim();
     if (!value) return;
@@ -49,61 +54,119 @@ export default function TodosScreen() {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
   };
 
+  const isLight = colorScheme === 'light';
+  const cardBg = isLight ? '#FFFFFF' : '#1A1D21';
+  const inputBg = isLight ? '#F8F9FA' : '#25282D';
+  const borderColor = isLight ? '#E5E7EB' : '#2F3238';
+  const tintColor = isLight ? '#0a7ea4' : '#4FC3F7';
+
   return (
     <ParallaxScrollView
-      headerBackgroundColor={{ light: '#F4F7FB', dark: '#0F1216' }}
+      headerBackgroundColor={{ light: '#F0F4F8', dark: '#0A0D12' }}
       headerImage={
-        <View className="absolute -bottom-5 -right-[10px] opacity-[0.12]">
-          <IconSymbol size={120} name="checkmark.circle.fill" color={Colors[colorScheme].tint} />
+        <View className="absolute -bottom-5 -right-[10px] opacity-[0.08]">
+          <IconSymbol size={140} name="checkmark.circle.fill" color={tintColor} />
         </View>
       }>
-      <ThemedView className="flex-row items-center justify-between mb-3">
-        <ThemedText type="title" style={{ fontFamily: Fonts.rounded }}>
-          Your Todos
+      <View className="mb-6">
+        <ThemedText 
+          type="title" 
+          style={{ fontFamily: Fonts.rounded, marginBottom: 8 }}
+          className="text-5xl">
+          Todos
         </ThemedText>
-        <ThemedText type="default">{remaining} remaining</ThemedText>
-      </ThemedView>
+        <View className="flex-row items-center gap-4">
+          <View 
+            className="px-3 py-1.5 rounded-full"
+            style={{ backgroundColor: isLight ? '#E3F2FD' : '#1E3A5F' }}>
+            <ThemedText 
+              className="text-sm font-semibold"
+              style={{ color: tintColor }}>
+              {remaining} 残り
+            </ThemedText>
+          </View>
+          {completedCount > 0 && (
+            <View 
+              className="px-3 py-1.5 rounded-full"
+              style={{ backgroundColor: isLight ? '#E8F5E9' : '#1B3E1F' }}>
+              <ThemedText 
+                className="text-sm font-semibold"
+                style={{ color: isLight ? '#4CAF50' : '#81C784' }}>
+              {completedCount} 完了
+            </ThemedText>
+          </View>
+          )}
+        </View>
+      </View>
 
       <ThemedView
-        className="flex-row items-center gap-2.5 px-[14px] py-3 rounded-[14px] mb-3"
-        style={{ shadowColor: '#000', shadowOpacity: 0.1, shadowRadius: 10, elevation: 2 }}
-        lightColor="#ffffff"
-        darkColor="#1E2022">
-        <IconSymbol name="square.and.pencil" size={20} color={Colors[colorScheme].icon} />
+        className="flex-row items-center gap-3 px-4 py-4 rounded-2xl mb-4"
+        style={{
+          backgroundColor: inputBg,
+          borderWidth: 1,
+          borderColor: borderColor,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 4 },
+          shadowOpacity: isLight ? 0.05 : 0.2,
+          shadowRadius: 12,
+          elevation: 3,
+        }}>
+        <View 
+          className="w-10 h-10 rounded-xl items-center justify-center"
+          style={{ backgroundColor: isLight ? '#FFFFFF' : '#2F3238' }}>
+          <IconSymbol name="square.and.pencil" size={18} color={tintColor} />
+        </View>
         <TextInput
           value={text}
           onChangeText={setText}
-          placeholder="Add a new task…"
-          placeholderTextColor={colorScheme === 'light' ? '#9BA1A6' : '#687076'}
-          className="flex-1 text-base py-1"
-          style={{ color: colorScheme === 'light' ? '#11181C' : '#ECEDEE' }}
+          placeholder="新しいタスクを追加..."
+          placeholderTextColor={isLight ? '#9CA3AF' : '#6B7280'}
+          className="flex-1 text-base py-2"
+          style={{ 
+            color: isLight ? '#111827' : '#F9FAFB',
+            fontFamily: Fonts.sans,
+          }}
           onSubmitEditing={handleAdd}
           returnKeyType="done"
         />
-        <TouchableOpacity onPress={handleAdd} activeOpacity={0.8}>
-          <IconSymbol name="plus.circle.fill" size={26} color={Colors[colorScheme].tint} />
+        <TouchableOpacity 
+          onPress={handleAdd} 
+          activeOpacity={0.7}
+          className="w-10 h-10 rounded-xl items-center justify-center"
+          style={{ backgroundColor: tintColor }}>
+          <IconSymbol name="plus" size={20} color="#FFFFFF" weight="bold" />
         </TouchableOpacity>
       </ThemedView>
 
       {tasks === undefined ? (
-        <ThemedView className="items-center gap-2 py-6">
-          <IconSymbol name="hourglass" size={28} color={Colors[colorScheme].icon} />
-          <ThemedText>Loading your tasks…</ThemedText>
+        <ThemedView className="items-center gap-3 py-12">
+          <View 
+            className="w-16 h-16 rounded-2xl items-center justify-center"
+            style={{ backgroundColor: isLight ? '#F3F4F6' : '#25282D' }}>
+            <IconSymbol name="hourglass" size={32} color={tintColor} />
+          </View>
+          <ThemedText className="text-base opacity-70">読み込み中...</ThemedText>
         </ThemedView>
       ) : tasks.length === 0 ? (
-        <ThemedView className="items-center gap-2 py-6">
-          <IconSymbol name="sparkles" size={28} color={Colors[colorScheme].icon} />
-          <ThemedText>No tasks yet. Add your first!</ThemedText>
+        <ThemedView className="items-center gap-3 py-12">
+          <View 
+            className="w-16 h-16 rounded-2xl items-center justify-center"
+            style={{ backgroundColor: isLight ? '#F3F4F6' : '#25282D' }}>
+            <IconSymbol name="sparkles" size={32} color={tintColor} />
+          </View>
+          <ThemedText className="text-base opacity-70">まだタスクがありません</ThemedText>
+          <ThemedText className="text-sm opacity-50">最初のタスクを追加してみましょう</ThemedText>
         </ThemedView>
       ) : (
-        <View className="gap-2.5">
-          {tasks.map((task) => (
+        <View className="gap-3">
+          {tasks.map((task, index) => (
             <TaskRow
               key={task._id}
               task={task}
               onToggle={() => handleToggle(task)}
               onRemove={() => handleRemove(task)}
               colorScheme={colorScheme}
+              index={index}
             />)
           )}
         </View>
@@ -117,32 +180,71 @@ function TaskRow({
   onToggle,
   onRemove,
   colorScheme,
+  index,
 }: {
   task: Task;
   onToggle: () => void;
   onRemove: () => void;
   colorScheme: 'light' | 'dark';
+  index: number;
 }) {
+  const isLight = colorScheme === 'light';
+  const cardBg = isLight ? '#FFFFFF' : '#1A1D21';
+  const borderColor = isLight ? '#E5E7EB' : '#2F3238';
+  const tintColor = isLight ? '#0a7ea4' : '#4FC3F7';
+  const completedBg = isLight ? '#F0FDF4' : '#1A2E1F';
+  const completedBorder = isLight ? '#D1FAE5' : '#2D4A35';
+
   return (
     <ThemedView
-      className="flex-row items-center justify-between px-[14px] py-3 rounded-[14px]"
-      style={{ shadowColor: '#000', shadowOpacity: 0.08, shadowRadius: 8, elevation: 1 }}
-      lightColor="#ffffff"
-      darkColor="#1E2022">
-      <TouchableOpacity className="flex-row items-center gap-2.5 flex-1" onPress={onToggle} activeOpacity={0.8}>
-        <IconSymbol
-          name={task.completed ? 'checkmark.circle.fill' : 'circle'}
-          size={24}
-          color={task.completed ? Colors[colorScheme].tint : Colors[colorScheme].icon}
-          weight={task.completed ? 'bold' : 'regular'}
-        />
+      className="flex-row items-center justify-between px-4 py-4 rounded-2xl"
+      style={{
+        backgroundColor: task.completed ? completedBg : cardBg,
+        borderWidth: 1,
+        borderColor: task.completed ? completedBorder : borderColor,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: isLight ? 0.03 : 0.15,
+        shadowRadius: 8,
+        elevation: 2,
+        opacity: task.completed ? 0.85 : 1,
+      }}>
+      <TouchableOpacity 
+        className="flex-row items-center gap-3 flex-1" 
+        onPress={onToggle} 
+        activeOpacity={0.7}>
+        <View 
+          className={`w-6 h-6 rounded-full items-center justify-center ${task.completed ? '' : 'border-2'}`}
+          style={{
+            backgroundColor: task.completed ? tintColor : 'transparent',
+            borderColor: task.completed ? tintColor : (isLight ? '#D1D5DB' : '#4B5563'),
+          }}>
+          {task.completed && (
+            <IconSymbol name="checkmark" size={14} color="#FFFFFF" weight="bold" />
+          )}
+        </View>
         <ThemedText
-          className={task.completed ? 'text-base line-through opacity-[0.55]' : 'text-base'}>
+          className={`text-base flex-1 ${task.completed ? 'line-through' : ''}`}
+          style={{
+            color: task.completed 
+              ? (isLight ? '#6B7280' : '#9CA3AF')
+              : (isLight ? '#111827' : '#F9FAFB'),
+            opacity: task.completed ? 0.6 : 1,
+            fontFamily: Fonts.sans,
+          }}>
           {task.text}
         </ThemedText>
       </TouchableOpacity>
-      <TouchableOpacity onPress={onRemove} activeOpacity={0.8}>
-        <IconSymbol name="trash" size={18} color={colorScheme === 'light' ? '#D12D2D' : '#FF6B6B'} />
+      <TouchableOpacity 
+        onPress={onRemove} 
+        activeOpacity={0.7}
+        className="w-9 h-9 rounded-lg items-center justify-center"
+        style={{ backgroundColor: isLight ? '#FEF2F2' : '#3F1F1F' }}>
+        <IconSymbol 
+          name="trash" 
+          size={16} 
+          color={isLight ? '#EF4444' : '#F87171'} 
+        />
       </TouchableOpacity>
     </ThemedView>
   );
